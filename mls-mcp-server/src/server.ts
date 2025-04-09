@@ -43,10 +43,13 @@ class MLSServer {
           description: 'Get 2 sample property listings from MLS Grid',
           inputSchema: {
             type: 'object',
-            properties: {},
+            properties: {
+              query: { type: 'string' }
+            },
             required: [],
+            additionalProperties: true
           },
-        },
+        }
       ],
     }));
 
