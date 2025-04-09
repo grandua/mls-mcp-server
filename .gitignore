@@ -1,1 +1,8 @@
 .qodo
+/.idea/.gitignore
+/.idea/encodings.xml
+/.idea/indexLayout.xml
+/.idea/vcs.xml
+/mls-mcp-server/node_modules/
+mls-mcp-server/dist/server.js
+mls-mcp-server/node_modules/.package-lock.json
