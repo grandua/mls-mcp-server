@@ -7,8 +7,10 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import axios from 'axios';
 
-const API_URL = 'https://api-demo.mlsgrid.com/v2/Property';
-const API_TOKEN = 'c277cd055de42b4405c9d70a65f5e25aa116670f';
+//demo: const API_URL = 'https://api-demo.mlsgrid.com/v2/Property';
+const API_URL = 'https://api.mlsgrid.com/v2/Property';
+//demo: const API_TOKEN = 'c277cd055de42b4405c9d70a65f5e25aa116670f';
+const API_TOKEN = '9123d075cd1b5d9d063c9083156efb112cf913b6';
 
 class MLSServer {
   private server: Server;
