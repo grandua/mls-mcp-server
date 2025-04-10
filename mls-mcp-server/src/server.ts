@@ -12,6 +12,15 @@ const API_URL = 'https://api.mlsgrid.com/v2/Property';
 //demo: const API_TOKEN = 'c277cd055de42b4405c9d70a65f5e25aa116670f';
 const API_TOKEN = '9123d075cd1b5d9d063c9083156efb112cf913b6';
 
+interface ListingRequest {
+  priceFilter?: string;
+}
+
+interface Listing {
+  ListPrice: number;
+  [key: string]: any;
+}
+
 class MLSServer {
   private server: Server;
 
@@ -42,11 +51,14 @@ class MLSServer {
       tools: [
         {
           name: 'get_listings',
-          description: 'Get 2 sample property listings from MLS Grid',
+          description: `Fetches MLS listings with optional price filtering. \n                 LLM Instructions: Use OData syntax for filters. \n                 Examples: \n                 - 'ListPrice gt 500000' (homes over $500K)\n                 - 'ListPrice lt 300000' (homes under $300K)\n                 - 'ListPrice gt 200000 and ListPrice lt 400000' (between $200K-$400K)`,
           inputSchema: {
             type: 'object',
             properties: {
-              query: { type: 'string' }
+              priceFilter: {
+                type: 'string',
+                description: 'OData filter expression for ListPrice (e.g. "ListPrice gt 500000")'
+              }
             },
             required: [],
             additionalProperties: true
@@ -60,22 +72,41 @@ class MLSServer {
         throw new Error(`Unknown tool: ${request.params.name}`);
       }
 
+      const input = request.params.arguments as ListingRequest;
+      const params: any = { $top: 3 };
+
       try {
-        const response = await axios.get(API_URL, {
+        const config = {
+          method: 'get',
           headers: {
             'Authorization': `Bearer ${API_TOKEN}`,
             'Accept': 'application/json',
           },
-          params: {
-            '$top': 2
+          params: params
+        };
+
+        const response = await axios.get(API_URL, config);
+        let filteredData = response.data.value;
+        if (input?.priceFilter) {
+          const match = input.priceFilter.match(/ListPrice\s*(lt|gt)\s*(\d+)/);
+          if (match) {
+            const [_, operator, value] = match;
+            const price = parseInt(value, 10);
+            filteredData = filteredData.filter((listing: Listing) => {
+              if (operator === 'lt') {
+                return listing.ListPrice < price;
+              } else {
+                return listing.ListPrice > price;
+              }
+            });
           }
-        });
+        }
 
         return {
           content: [
             {
               type: 'text',
-              text: JSON.stringify(response.data.value, null, 2),
+              text: JSON.stringify(filteredData, null, 2),
             },
           ],
         };
@@ -85,7 +116,7 @@ class MLSServer {
             content: [
               {
                 type: 'text',
-                text: `MLS Grid API error: ${error.response?.data?.message || error.message}`,
+                text: `MLS Grid API error:\nStatus: ${error.response?.status}\nHeaders: ${JSON.stringify(error.response?.headers)}\nData: ${JSON.stringify(error.response?.data)}\nConfig: ${JSON.stringify(error.config)}`,
               },
             ],
             isError: true,
