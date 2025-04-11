@@ -32,8 +32,12 @@ COPY Flowise/database.sqlite /root/.flowise/
 COPY Flowise/encryption.key /root/.flowise/
 COPY Flowise/settings.json /root/.flowise/
 
-# Expose Flowise port only
+# Configure Flowise
+ENV FLOWISE_HOST=0.0.0.0 FLOWISE_PORT=3000
 EXPOSE 3000
 
-# Startup command (Flowise only)
-CMD ["sh", "-c", "flowise start & node /app/dist/server.js"]
+# Install process manager
+RUN npm install -g concurrently
+
+# Start both services
+CMD concurrently "flowise start" "node dist/main.js"

@@ -13,7 +13,13 @@
       }
     ],
     "healthChecks": {
-      "flowise": "curl -f http://localhost:3000 || exit 1"
+      "flowise": {
+        "type": "http",
+        "path": "/",
+        "port": 3000,
+        "interval": "30s",
+        "timeout": "5s"
+      }
     }
   },
   "env": {
