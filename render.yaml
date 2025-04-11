@@ -3,7 +3,7 @@ services:
     name: mls-mcp-server
     runtime: docker
     # Fixed path to match the nested structure in GitHub
-    dockerfilePath: ./mls-mcp-server/Dockerfile
+    dockerfilePath: /mls-mcp-server/Dockerfile
     env: docker
     autoDeploy: true
     port: 8080
