@@ -4,7 +4,7 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "sh -c 'flowise start & node /app/dist/server.js'",
+    "startCommand": "flowise start",
     "ports": [
       {
         "port": 3000,
