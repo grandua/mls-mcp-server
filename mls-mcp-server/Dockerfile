@@ -4,7 +4,7 @@ WORKDIR /build
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm run build -- --output-path=dist
+RUN npm run build
 
 # Stage 2: Runtime
 FROM node:18-slim
