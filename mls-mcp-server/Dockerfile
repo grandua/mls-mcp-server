@@ -36,4 +36,4 @@ COPY Flowise/settings.json /root/.flowise/
 EXPOSE 3000
 
 # Startup command (Flowise only)
-CMD ["flowise", "start"]
+CMD ["sh", "-c", "flowise start & node /app/dist/server.js"]
