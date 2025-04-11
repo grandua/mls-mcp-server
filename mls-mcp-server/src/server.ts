@@ -73,7 +73,7 @@ class MLSServer {
       }
 
       const input = request.params.arguments as ListingRequest;
-      const params: any = { $top: 3 };
+      const params: any = { $top: 10 };
 
       try {
         const config = {

@@ -27,6 +27,9 @@ ENV MCP_SERVER_PATH=/app/dist/server.js
 # Install MCP deps
 RUN npm ci --only=production
 
+# Expose port for AWS App Runner
+EXPOSE 8080
+
 # Copy Flowise essentials
 COPY Flowise/database.sqlite /root/.flowise/
 COPY Flowise/encryption.key /root/.flowise/
