@@ -39,5 +39,5 @@ EXPOSE 3000
 # Install process manager
 RUN npm install -g concurrently
 
-# Start both services
-CMD concurrently "flowise start" "node dist/server.js"
+# Start Flowise only
+CMD flowise start
