@@ -4,7 +4,7 @@ WORKDIR /build
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm run build
+RUN npm run build -- --output-path=dist
 
 # Stage 2: Runtime
 FROM node:18-slim
@@ -40,4 +40,4 @@ EXPOSE 3000
 RUN npm install -g concurrently
 
 # Start both services
-CMD concurrently "flowise start" "node dist/main.js"
+CMD concurrently "flowise start" "node dist/server.js"
