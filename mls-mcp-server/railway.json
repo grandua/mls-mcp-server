@@ -13,8 +13,7 @@
       }
     ],
     "healthChecks": {
-      "flowise": "curl -f http://localhost:3000 || exit 1",
-      "mcp": "curl -f http://localhost:3001 || exit 1"
+      "flowise": "curl -f http://localhost:3000 || exit 1"
     }
   },
   "env": {
