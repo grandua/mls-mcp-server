@@ -2,7 +2,8 @@ services:
   - type: web
     name: mls-mcp-server
     runtime: docker
-    dockerfilePath: ./Dockerfile
+    rootDir: ./mls-mcp-server # Set the build root to the subdirectory
+    dockerfilePath: ./Dockerfile # Path is relative to rootDir
     env: docker
     autoDeploy: true
     port: 8080
