@@ -2,7 +2,7 @@ services:
   - type: web
     name: mls-mcp-server
     runtime: docker
-    dockerfilePath: ./mls-mcp-server/Dockerfile
+    dockerfilePath: ./Dockerfile
     env: docker
     autoDeploy: true
     port: 8080
