@@ -8,8 +8,23 @@
     "ports": [
       {
         "port": 3000,
-        "protocol": "TCP"
+        "protocol": "TCP",
+        "public": true,
+        "http": {
+          "routes": [
+            { "handle": "api" },
+            { "handle": "filesystem" }
+          ]
+        }
       }
-    ]
+    ],
+    "healthChecks": {
+      "flowise": "curl -f http://localhost:3000 || exit 1",
+      "mcp": "curl -f http://localhost:3001 || exit 1"
+    }
+  },
+  "env": {
+    "FLOWISE_PORT": "3000",
+    "APIKEY_PATH": "/app/Flowise/encryption.key" 
   }
 }
