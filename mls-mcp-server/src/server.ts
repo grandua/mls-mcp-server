@@ -64,7 +64,10 @@ Note: Always use proper OData syntax including quotes for string values and prop
             properties: {
               propertyTypeFilter: {
                 type: 'string',
-                description: 'OData $filter expression for PropertyType (e.g. "PropertyType eq \"Residential\"")'
+                description: `OData $filter expression for PropertyType 
+                (e.g. "PropertyType eq \"Residential\"")
+                
+                Available values: Residential, ResidentialIncome, ResidentialLease, BusinessOpportunity, CommercialLease, CommercialSale, Farm, Land, ManufacturedInPark`
               }
             },
             required: [],
@@ -110,7 +113,7 @@ Note: Always use proper OData syntax including quotes for string values and prop
           content: [
             {
               type: 'text',
-              text: `API Request URL: ${fullUrl}\n\n${JSON.stringify(response.data.value, null, 2)}`,
+              text: `${JSON.stringify(response.data.value, null, 2)}\n\nAPI Request URL: ${fullUrl}`,
             },
           ],
         };
