@@ -75,6 +75,12 @@ class MLSServer {
       const input = request.params.arguments as ListingRequest;
       const params: any = { $top: 10 };
 
+      if (input?.priceFilter 
+        && typeof input.priceFilter === 'string' 
+        && input.priceFilter.trim() !== '') {
+        params['$filter'] = input.priceFilter;
+      }
+
       try {
         const config = {
           method: 'get',
@@ -85,28 +91,14 @@ class MLSServer {
           params: params
         };
 
+        const fullUrl = `${API_URL}?${new URLSearchParams(params).toString()}`;
         const response = await axios.get(API_URL, config);
-        let filteredData = response.data.value;
-        if (input?.priceFilter) {
-          const match = input.priceFilter.match(/ListPrice\s*(lt|gt)\s*(\d+)/);
-          if (match) {
-            const [_, operator, value] = match;
-            const price = parseInt(value, 10);
-            filteredData = filteredData.filter((listing: Listing) => {
-              if (operator === 'lt') {
-                return listing.ListPrice < price;
-              } else {
-                return listing.ListPrice > price;
-              }
-            });
-          }
-        }
 
         return {
           content: [
             {
               type: 'text',
-              text: JSON.stringify(filteredData, null, 2),
+              text: `API Request URL: ${fullUrl}\n\n${JSON.stringify(response.data.value, null, 2)}`,
             },
           ],
         };
