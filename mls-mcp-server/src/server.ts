@@ -13,11 +13,11 @@ const API_URL = 'https://api.mlsgrid.com/v2/Property';
 const API_TOKEN = '9123d075cd1b5d9d063c9083156efb112cf913b6';
 
 interface ListingRequest {
-  priceFilter?: string;
+  propertyTypeFilter?: string;
 }
 
 interface Listing {
-  ListPrice: number;
+  PropertyType: string;
   [key: string]: any;
 }
 
@@ -51,13 +51,20 @@ class MLSServer {
       tools: [
         {
           name: 'get_listings',
-          description: `Fetches MLS listings with optional price filtering. \n                 LLM Instructions: Use OData syntax for filters. \n                 Examples: \n                 - 'ListPrice gt 500000' (homes over $500K)\n                 - 'ListPrice lt 300000' (homes under $300K)\n                 - 'ListPrice gt 200000 and ListPrice lt 400000' (between $200K-$400K)`,
+          description: `Fetches MLS listings using OData filter syntax.
+
+OData Filter Examples:
+- Single type: 'PropertyType eq \"Residential\"'
+- Multiple types: 'PropertyType eq \"Residential\" or PropertyType eq \"Condo\"'
+- Excluding types: 'PropertyType ne \"Land\"'
+
+Note: Always use proper OData syntax including quotes for string values and proper spacing around operators.`,
           inputSchema: {
             type: 'object',
             properties: {
-              priceFilter: {
+              propertyTypeFilter: {
                 type: 'string',
-                description: 'OData filter expression for ListPrice (e.g. "ListPrice gt 500000")'
+                description: 'OData $filter expression for PropertyType (e.g. "PropertyType eq \"Residential\"")'
               }
             },
             required: [],
@@ -75,10 +82,15 @@ class MLSServer {
       const input = request.params.arguments as ListingRequest;
       const params: any = { $top: 10 };
 
-      if (input?.priceFilter 
-        && typeof input.priceFilter === 'string' 
-        && input.priceFilter.trim() !== '') {
-        params['$filter'] = input.priceFilter;
+      if (input?.propertyTypeFilter 
+        && typeof input.propertyTypeFilter === 'string' 
+        && input.propertyTypeFilter.trim() !== '') {
+        const filter = input.propertyTypeFilter.trim();
+        if (!filter.startsWith('PropertyType')) {
+          params['$filter'] = `PropertyType ${filter}`;
+        } else {
+          params['$filter'] = filter;
+        }
       }
 
       try {
