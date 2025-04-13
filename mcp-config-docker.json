@@ -1,0 +1,7 @@
+{
+  "command": "/usr/local/bin/node",
+  "args": [
+    "/app/dist/server.js"
+  ],
+  "stdio": ["pipe", "pipe", "pipe"]
+}

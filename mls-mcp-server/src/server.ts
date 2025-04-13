@@ -54,9 +54,9 @@ class MLSServer {
           description: `Fetches MLS listings using OData filter syntax.
 
 OData Filter Examples:
-- Single type: 'PropertyType eq \"Residential\"'
-- Multiple types: 'PropertyType eq \"Residential\" or PropertyType eq \"Condo\"'
-- Excluding types: 'PropertyType ne \"Land\"'
+- Single type: 'PropertyType eq \'Residential\''
+- Multiple types: 'PropertyType eq \'Residential\' or PropertyType eq \'Condo\''
+- Excluding types: 'PropertyType ne \'Land\''
 
 Note: Always use proper OData syntax including quotes for string values and proper spacing around operators.`,
           inputSchema: {
@@ -65,7 +65,7 @@ Note: Always use proper OData syntax including quotes for string values and prop
               propertyTypeFilter: {
                 type: 'string',
                 description: `OData $filter expression for PropertyType 
-                (e.g. "PropertyType eq \"Residential\"")
+                (e.g. "PropertyType eq 'Residential'")
                 
                 Available values: Residential, ResidentialIncome, ResidentialLease, BusinessOpportunity, CommercialLease, CommercialSale, Farm, Land, ManufacturedInPark`
               }
@@ -85,15 +85,11 @@ Note: Always use proper OData syntax including quotes for string values and prop
       const input = request.params.arguments as ListingRequest;
       const params: any = { $top: 10 };
 
+      // Simplify filter handling: Use the provided filter directly
       if (input?.propertyTypeFilter 
         && typeof input.propertyTypeFilter === 'string' 
         && input.propertyTypeFilter.trim() !== '') {
-        const filter = input.propertyTypeFilter.trim();
-        if (!filter.startsWith('PropertyType')) {
-          params['$filter'] = `PropertyType ${filter}`;
-        } else {
-          params['$filter'] = filter;
-        }
+        params['$filter'] = input.propertyTypeFilter.trim();
       }
 
       try {
